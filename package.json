@@ -17,6 +17,7 @@
   },
   "author": "Santiago Taschetta",
   "license": "ISC",
+  "keywords": [ "template", "file", "utility"],
   "bugs": {
     "url": "https://github.com/Taschetta/templater/issues"
   },
