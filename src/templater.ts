@@ -25,7 +25,7 @@ export default function useTemplater(params: {
     template: Template
   }) => {
     const filename = `${element.name.kebab}-${template.name}`
-    return `${pathDir}/${filename}`
+    return `${pathDir}/${filename}.js`
   }
   
   const generate = () => {
@@ -35,16 +35,18 @@ export default function useTemplater(params: {
       
       templates.forEach(template => {
         const pathFile = getPathFile({ pathDir, element, template })        
-        console.log(pathFile)
+        
         
         let templateData = fs.readFileSync(template.path, 'utf8')
-
-        templateData = templateData.replace(/{{ camel }}/g, element.name.camel)
-        templateData = templateData.replace(/{{ kebab }}/g, element.name.kebab)
-        templateData = templateData.replace(/{{ pascal }}/g, element.name.pascal)
-        templateData = templateData.replace(/{{ snake }}/g, element.name.snake)
+        
+        templateData = templateData.replace(/\$camel\$/g, element.name.camel)
+        templateData = templateData.replace(/\$kebab\$/g, element.name.kebab)
+        templateData = templateData.replace(/\$pascal\$/g, element.name.pascal)
+        templateData = templateData.replace(/\$snake\$/g, element.name.snake)
         
         fs.writeFileSync(pathFile, templateData)      
+        
+        console.log(`Generated file: ${pathFile}`)
       });      
     });
   }
