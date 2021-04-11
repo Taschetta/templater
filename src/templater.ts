@@ -1,49 +1,55 @@
-import { InvalidTemplateError } from './templater-errors.js'
-
 import fs from 'fs'
-import useCaser, { Caser } from '@taschetta/caser'
+import parseStructure, { StructureIn, Element } from './templater-structure.js'
+import parseTemplates, { Template } from './templater-templates.js'
 
-interface Template { name: string, route: string }
-const templates = [
-  { name: 'controller', route: './templates/controller' }, 
-  { name: 'endpoint', route: './templates/endpoint' }, 
-  { name: 'routes', route: './templates/routes' }
-]
-
-export default function useTemplater({ name, templateName, outDir }: {
-  name: string,
-  templateName: string,
+export default function useTemplater(params: {
+  structure: StructureIn,
+  templates: Template[],
   outDir: string,
 }) {
-  let caser: Caser
-  let template: Template
+  const outDir = params.outDir
+  const structure = parseStructure(params.structure)
+  const templates = parseTemplates(params.templates)
   
-  const getTemplate = () => {
-    const template = templates.find(t => t.name == templateName)
-    if(!template) throw new InvalidTemplateError(templateName)
-    return template
-  } 
+  const getPathDir = ({ element }: {
+    element: Element,
+  }) => {
+    return (element.group) 
+      ? `${outDir}/${element.group}/${element.name.kebab}`
+      : `${outDir}/${element.name.kebab}`
+  }
 
-  const generate = () => {
-    fs.mkdirSync(`${outDir}/${caser.kebab}`, { recursive: true })
-    
-    let templateData = fs.readFileSync(template.route, 'utf8')
-    templateData = templateData.replace(/{{ camel }}/g, caser.camel)
-    templateData = templateData.replace(/{{ kebab }}/g, caser.kebab)
-    templateData = templateData.replace(/{{ pascal }}/g, caser.pascal)
-    templateData = templateData.replace(/{{ snake }}/g, caser.snake)
-    
-    fs.writeFileSync(`${outDir}/${caser.kebab}/${caser.kebab}-${template.name}`, templateData)
+  const getPathFile = ({ pathDir, element, template }: {
+    pathDir: string,
+    element: Element
+    template: Template
+  }) => {
+    const filename = `${element.name.kebab}-${template.name}`
+    return `${pathDir}/${filename}`
   }
   
-  caser = useCaser(name)
-  template = getTemplate()
+  const generate = () => {
+    structure.forEach(element => {
+      const pathDir = getPathDir({ element })
+      fs.mkdirSync(pathDir, { recursive: true })
+      
+      templates.forEach(template => {
+        const pathFile = getPathFile({ pathDir, element, template })        
+        console.log(pathFile)
+        
+        let templateData = fs.readFileSync(template.path, 'utf8')
+
+        templateData = templateData.replace(/{{ camel }}/g, element.name.camel)
+        templateData = templateData.replace(/{{ kebab }}/g, element.name.kebab)
+        templateData = templateData.replace(/{{ pascal }}/g, element.name.pascal)
+        templateData = templateData.replace(/{{ snake }}/g, element.name.snake)
+        
+        fs.writeFileSync(pathFile, templateData)      
+      });      
+    });
+  }
 
   return {
     generate
   }
 }
-
-const templater = useTemplater({ name: 'test-template', templateName: 'endpoint', outDir: './test' })
-
-templater.generate()

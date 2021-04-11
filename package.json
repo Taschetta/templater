@@ -4,9 +4,10 @@
   "description": "A simple utility for creating files from templates",
   "type": "module",
   "main": "build/templater.js",
+  "files": ["build/**/*"],
   "scripts": {
     "build": "tsc",
-    "generate": "npm run build; node build/templater"
+    "generate": "npm run build; node build/index"
   },
   "repository": {
     "type": "git",
