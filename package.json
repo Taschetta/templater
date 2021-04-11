@@ -2,9 +2,11 @@
   "name": "@taschetta/templater",
   "version": "1.0.0",
   "description": "A simple utility for creating files from templates",
+  "type": "module",
   "main": "build/templater.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "generate": "npm run build; node build/templater"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,6 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@taschetta/caser": "^1.0.0"
+    "@taschetta/caser": "^1.0.1"
   }
 }
