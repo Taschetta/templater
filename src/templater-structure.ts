@@ -4,7 +4,7 @@ export interface Element { group: string | undefined, name: Caser }
 export type StructureIn = Array<string | { group: string, elements: string[] }>
 export type StructureOut = Array<Element>
 
-export default function parseStructure(structure_in: StructureIn): StructureOut {  
+export default function useStructure(structure_in: StructureIn): StructureOut {  
   const structure_out: StructureOut = []
   
   structure_in.forEach(structure_item => {

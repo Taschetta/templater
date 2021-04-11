@@ -1,6 +1,6 @@
 import fs from 'fs'
-import parseStructure, { StructureIn, Element } from './templater-structure.js'
-import parseTemplates, { Template } from './templater-templates.js'
+import useStructure, { StructureIn, Element } from './templater-structure.js'
+import useTemplates, { Template } from './templater-templates.js'
 
 export default function useTemplater(params: {
   structure: StructureIn,
@@ -8,8 +8,8 @@ export default function useTemplater(params: {
   outDir: string,
 }) {
   const outDir = params.outDir
-  const structure = parseStructure(params.structure)
-  const templates = parseTemplates(params.templates)
+  const structure = useStructure(params.structure)
+  const templates = useTemplates(params.templates)
   
   const getPathDir = ({ element }: {
     element: Element,
