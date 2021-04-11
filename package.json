@@ -4,10 +4,12 @@
   "description": "A simple utility for creating files from templates",
   "type": "module",
   "main": "build/templater.js",
-  "files": ["build/**/*"],
+  "files": [
+    "build/**/*"
+  ],
   "scripts": {
     "build": "tsc",
-    "generate": "npm run build; node build/index"
+    "example": "node example/index"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,6 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@taschetta/caser": "^1.0.1"
+    "@taschetta/caser": "^1.0.3"
   }
 }
